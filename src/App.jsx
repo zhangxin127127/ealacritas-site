@@ -136,7 +136,37 @@ const heroSlides = [
     icon: '★',
   },
 ];
+const handleSubmit = async e => {
+  e.preventDefault();
+  alert('handleSubmit triggered');
 
+  const form = e.target;
+
+  const formData = {
+    email: form.email.value,
+    orderId: form.orderId.value,
+    productType: form.productType.value,
+    name: form.name.value,
+    message: form.message.value,
+  };
+
+  const res = await fetch('/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  const result = await res.json();
+
+  if (result.success) {
+    alert('Submitted successfully!');
+    form.reset();
+  } else {
+    alert('Submission failed');
+  }
+};
 const products = [
   {
     tag: 'NEW',
@@ -386,27 +416,36 @@ function SupportSection() {
             <p className="mt-2 text-sm text-neutral-600">
               Only email, order ID, and product type are required.
             </p>
-            <form className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              {' '}
               <input
+                name="email"
                 className="h-12 w-full rounded-xl border border-neutral-200 px-4 outline-none focus:border-[#FF6A00]"
                 placeholder="Email *"
                 type="email"
               />
               <input
+                name="orderId"
                 className="h-12 w-full rounded-xl border border-neutral-200 px-4 outline-none focus:border-[#FF6A00]"
                 placeholder="Order ID *"
               />
-              <select className="h-12 w-full rounded-xl border border-neutral-200 px-4 outline-none focus:border-[#FF6A00]">
+              <select
+                name="productType"
+                className="h-12 w-full rounded-xl border border-neutral-200 px-4 outline-none focus:border-[#FF6A00]"
+              >
+                {' '}
                 <option>Weighted Silent Basketball</option>
                 <option>Outdoor Basketball</option>
                 <option>Play Card System</option>
                 <option>Other Product</option>
               </select>
               <input
+                name="name"
                 className="h-12 w-full rounded-xl border border-neutral-200 px-4 outline-none focus:border-[#FF6A00]"
                 placeholder="Name optional"
               />
               <textarea
+                name="message"
                 className="min-h-[96px] w-full rounded-xl border border-neutral-200 px-4 py-3 outline-none focus:border-[#FF6A00]"
                 placeholder="Message optional"
               />
@@ -414,9 +453,12 @@ function SupportSection() {
                 <input type="checkbox" className="mt-1" />I agree to the Privacy Policy and allow
                 Ealacritas to contact me regarding product support and updates.
               </label>
-              <Button className="h-12 w-full rounded-xl text-base font-semibold">
+              <button
+                type="submit"
+                className="h-12 w-full rounded-xl bg-[#FF6A00] text-white text-base font-semibold hover:bg-[#E65C00] transition"
+              >
                 Activate Support
-              </Button>
+              </button>
             </form>
           </CardContent>
         </Card>
